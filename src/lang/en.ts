@@ -1,6 +1,9 @@
 export default {
   route: {
-    dashboard: 'Dashboard'
+    dashboard: 'Dashboard',
+    system: 'System',
+    user: 'User',
+    role: 'Role'
   },
   login: {
     title: 'Login Form',

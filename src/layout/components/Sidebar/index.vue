@@ -1,5 +1,30 @@
 <template>
-  <h1 />
+  <div :class="{'has-logo': showLogo}">
+    <sidebar-logo
+      v-if="showLogo"
+      :collapse="isCollapse"
+    />
+    <el-scrollbar wrap-class="scrollbar-wrapper">
+      <el-menu
+        :default-active="activeMenu"
+        :collapse="isCollapse"
+        :background-color="variables.menuBg"
+        :text-color="variables.menuText"
+        :active-text-color="menuActiveTextColor"
+        :unique-opened="false"
+        :collapse-transition="false"
+        mode="vertical"
+      >
+        <sidebar-item
+          v-for="route in routes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"
+          :is-collapse="isCollapse"
+        />
+      </el-menu>
+    </el-scrollbar>
+  </div>
 </template>
 
 <script lang="ts">
@@ -54,6 +79,10 @@ export default class extends Vue {
 
   get isCollapse() {
     return !this.sidebar.opened
+  }
+
+  mounted() {
+    console.log(this.routes)
   }
 }
 

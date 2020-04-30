@@ -11,6 +11,7 @@ import '@/styles/index.scss'
 import '@/styles/element-variables.scss'
 import '@/permission'
 import '@/utils/error-log'
+import '@/icons/components'
 
 Vue.config.productionTip = false
 Vue.use(ElementUi, {

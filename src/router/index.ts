@@ -73,7 +73,7 @@ export const asyncRoutes: Array<RouteConfig> = [
     redirect: '/system/user',
     meta: {
       title: 'system',
-      icon: 'el-icon-setting',
+      icon: 'user',
       alwaysShow: true
     },
     children: [
@@ -88,6 +88,7 @@ export const asyncRoutes: Array<RouteConfig> = [
       }, {
         path: 'role',
         component: () => import(/* webpackChunkName: "role" */ '@/views/role/index.vue'),
+        name: '角色管理',
         meta: {
           title: 'role',
           roles: ['admin']
