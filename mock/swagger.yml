@@ -20,6 +20,68 @@ tags:
   - name: users
     description: Users related api.
 paths:
+  /roles:
+    get:
+      tags:
+        - roles
+      summary: Get Role List
+      description: Return a list of roles.
+      operationId: getRoles
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  data:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        format: int32
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Role'
+    post:
+      tags:
+        - roles
+      summary: Create New Role
+      description: Create a new role.
+      operationId: createRole
+      security:
+        - AccessTokenAuth: []
+      parameters:
+        - name: role
+          in: query
+          required: true
+          description: The data for new role.
+          schema:
+            $ref: '#/components/schemas/Role'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  data:
+                    type: object
+                    properties:
+                      key:
+                        type: integer
+                        format: int64
+        401:
+          $ref: '#/components/responses/Unauthorized'
   /users:
     get:
       tags:
@@ -313,59 +375,77 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/Error"
-            schemas:
-              Error:
-                type: object
-                properties:
-                  code:
-                    type: string
-                  message:
-                    type: string
-                required:
-                  - code
-                  - message
-              User:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    format: int64
-                  username:
-                    type: string
-                    example: Armour
-                  password:
-                    type: string
-                    example: 12345678
-                  name:
-                    type: string
-                    example: Chong Guo
-                  email:
-                    type: string
-                    example: armourcy@gmail.com
-                  phone:
-                    type: string
-                    example: 18888888888
-                  avatar:
-                    type: string
-                    format: url
-                  introduction:
-                    type: string
-                    example: Always Sunshine
-                  roles:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Role/properties/key"
-                required:
-                  - id
-                  - username
-                  - password
-                  - roles
-              Timestamp:
-                oneOf:
-                  - type: integer
-                    format: int32
-                    example: 1559605283
-                  - type: string
-                    format: date-time
-                    example: 2017-07-21T17:32:28Z
-              AnyValue: {}
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+      Role:
+        type: object
+        properties:
+          key:
+            type: string
+            example: admin
+          name:
+            type: string
+            example: admin
+          description:
+            type: string
+            example: Super Administrator. Have access to view all pages.
+          routes:
+            $ref: '#/components/schemas/AnyValue'
+        required:
+          - key
+          - name
+          - routes  
+      User:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+          username:
+            type: string
+            example: Armour
+          password:
+            type: string
+            example: 12345678
+          name:
+            type: string
+            example: Chong Guo
+          email:
+            type: string
+            example: armourcy@gmail.com
+          phone:
+            type: string
+            example: 18888888888
+          avatar:
+            type: string
+            format: url
+          introduction:
+            type: string
+            example: Always Sunshine
+          roles:
+            type: array
+            items:
+              $ref: "#/components/schemas/Role/properties/key"
+        required:
+          - id
+          - username
+          - password
+          - roles
+      Timestamp:
+        oneOf:
+        - type: integer
+          format: int32
+          example: 1559605283
+        - type: string
+          format: date-time
+          example: 2017-07-21T17:32:28Z
+      AnyValue: {}

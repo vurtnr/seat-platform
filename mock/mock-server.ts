@@ -43,7 +43,6 @@ const connectorSwagger = connector(api,apiDefinition,options)
 connectorSwagger(app)
 
 const apiSummary = summarise(apiDefinition)
-console.log(apiSummary)
 
 
 app.use((req,res,next) => {

@@ -80,10 +80,6 @@ export default class extends Vue {
   get isCollapse() {
     return !this.sidebar.opened
   }
-
-  mounted() {
-    console.log(this.routes)
-  }
 }
 
 </script>

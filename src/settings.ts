@@ -12,7 +12,7 @@ interface Settings {
 
 const settings: Settings = {
   title: 'Seat-System',
-  showSettings: true,
+  showSettings: false,
   showTagsView: true,
   showSidebarLogo: true,
   fixedHeader: false,
