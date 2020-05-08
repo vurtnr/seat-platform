@@ -1,6 +1,6 @@
 import faker from "faker";
 import { Response, Request } from "express";
-import { IUserData } from '../src/api/types'
+import { IUserData, IMerchantsData } from '../src/api/types'
 
 const userList: IUserData[] = [
   {
@@ -25,9 +25,11 @@ const userList: IUserData[] = [
     email: 'editor@test.com',
     phone: '1234567890',
     roles: ['editor'],
-    status:2
+    status:1
   }
 ];
+
+const merchants: Array<IMerchantsData> = []
 
 const userCount = 100
 
@@ -38,11 +40,42 @@ for (let i = 2; i < userCount; i++) {
     password: faker.random.alphaNumeric(20),
     name: faker.name.findName(),
     avatar: faker.image.imageUrl(),
+    merchantId:faker.random.arrayElement([1, 2,3,4,5]),
     introduction: faker.lorem.sentence(20),
     email: faker.internet.email(),
     phone: faker.phone.phoneNumber(),
     roles: ['visitor'],
-    status: faker.random.arrayElement([1, 2, 3]),
+    status: faker.random.arrayElement([1, 3]),
+  })
+}
+
+for(let i = 0;i < userCount;i++) {
+  let arr: Array<IUserData> = []
+  let j = 0
+  while(j<5){
+    arr.push({
+      id: j,
+      username: 'user_' + faker.random.alphaNumeric(9),
+      password: faker.random.alphaNumeric(20),
+      name: faker.name.findName(),
+      avatar: faker.image.imageUrl(),
+      merchantId:i,
+      introduction: faker.lorem.sentence(20),
+      email: faker.internet.email(),
+      phone: faker.phone.phoneNumber(),
+      roles: ['visitor'],
+      status: faker.random.arrayElement([1, 3]),
+    })
+    j++
+  }
+  merchants.push({
+    id:i,
+    name:faker.name.findName(),
+    address:faker.address.streetAddress(),
+    phone:faker.phone.phoneNumber(),
+    email:faker.internet.exampleEmail(),
+    businessLicense:faker.random.uuid(),
+    peoples:arr
   })
 }
 
@@ -65,6 +98,7 @@ export const login = (req: Request, res: Response) => {
   }
 };
 
+
 export const getUsers = (req: Request, res: Response) => {
   const { status, name, page = 1, limit = 20, sort } = req.query
 
@@ -73,7 +107,6 @@ export const getUsers = (req: Request, res: Response) => {
     if (name && user.name !== name) return false
     return true
   })
-  console.log("users.length = ", users.length)
   if (sort === '-id') {
     users = users.reverse()
   }
@@ -83,6 +116,19 @@ export const getUsers = (req: Request, res: Response) => {
     data: {
       items: pageList,
       total: users.length
+    }
+  })
+}
+
+export const getMerchants = (req: Request, res: Response) => {
+  const { name, page = 1, limit = 20, sort } = req.query
+
+  const pageList = merchants.filter((_, index) => index < limit * page && index >= limit * (page - 1)) 
+  return res.json({
+    code: 20000,
+    data:{
+      items:pageList,
+      total:merchants.length
     }
   })
 }

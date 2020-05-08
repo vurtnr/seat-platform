@@ -47,7 +47,7 @@ paths:
                       items:
                         type: array
                         items:
-                          $ref: '#/components/schemas/Role'
+                          $ref: "#/components/schemas/Role"
     post:
       tags:
         - roles
@@ -62,7 +62,7 @@ paths:
           required: true
           description: The data for new role.
           schema:
-            $ref: '#/components/schemas/Role'
+            $ref: "#/components/schemas/Role"
       responses:
         200:
           description: OK
@@ -81,7 +81,7 @@ paths:
                         type: integer
                         format: int64
         401:
-          $ref: '#/components/responses/Unauthorized'
+          $ref: "#/components/responses/Unauthorized"
   /users:
     get:
       tags:
@@ -115,6 +115,35 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/User"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+  /merchants:
+    get:
+      tags:
+        - merchants
+      summary: Get merchants list
+      description: Return a list of merchant
+      operationId: getMerchants
+      security:
+        - AccessTokenAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Merchant"
         401:
           $ref: "#/components/responses/Unauthorized"
   /users/register:
@@ -399,11 +428,41 @@ components:
             type: string
             example: Super Administrator. Have access to view all pages.
           routes:
-            $ref: '#/components/schemas/AnyValue'
+            $ref: "#/components/schemas/AnyValue"
         required:
           - key
           - name
-          - routes  
+          - routes
+      Merchant:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+          name:
+            type: string
+            example: Google
+          address:
+            type: string
+            example: 03685 Lueilwitz Freeway
+          phone:
+            type: string
+            example: 13888888888
+          email:
+            type: string
+            example: 52465451@qq.com
+          businessLicense:
+            type: string
+            example: 7ac44ed3-e773-46dd-8461-9a45a2b565b1
+          photo:
+            type: string
+            format: url
+        required:
+          - id
+          - name
+          - address
+          - phone
+          - businessLicense
       User:
         type: object
         properties:
@@ -442,10 +501,10 @@ components:
           - roles
       Timestamp:
         oneOf:
-        - type: integer
-          format: int32
-          example: 1559605283
-        - type: string
-          format: date-time
-          example: 2017-07-21T17:32:28Z
+          - type: integer
+            format: int32
+            example: 1559605283
+          - type: string
+            format: date-time
+            example: 2017-07-21T17:32:28Z
       AnyValue: {}

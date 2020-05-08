@@ -2,13 +2,14 @@ export interface IUserData {
   id: number
   username: string
   password: string
-  checkPassword?:string,
+  merchantId?: number
+  checkPassword?: string
   name: string
   email: string
   phone: string
   avatar: string
   roles: string[]
-  introduction: string,
+  introduction: string
   status: number | null
 }
 
@@ -16,5 +17,16 @@ export interface IRoleData {
   key: string
   name: string
   description: string
-  routes?:any
+  routes?: any
+}
+
+export interface IMerchantsData {
+  id: number
+  name: string
+  address: string
+  phone: string
+  email: string
+  businessLicense: string
+  photo?: Array<string>
+  peoples?: Array<IUserData>
 }

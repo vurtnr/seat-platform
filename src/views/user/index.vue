@@ -42,53 +42,66 @@
         icon="el-icon-circle-plus"
         @click="showAddDialog"
       >
-        添加
+        邀请
       </el-button>
-      <el-button
-        size="small"
-        plain
-        type="primary"
-        icon="el-icon-remove"
-      >
-        冻结
-      </el-button>
-      <el-button
+      <!-- <el-button
         size="small"
         plain
         type="danger"
         icon="el-icon-error"
       >
         禁用
-      </el-button>
+      </el-button> -->
     </div>
     <div class="filter-container">
       <el-table
         :key="tableKey"
         v-loading="listLoading"
         :data="list"
-        border
         fit
         highlight-current-row
         style="width: 100%;"
         @sort-change="sortChange"
+        @expand-change="expandChange"
       >
-        <el-table-column
-          type="selection"
-          header-align="center"
-          align="center"
-          width="55"
-        />
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-row
+            :gutter="20"
+              v-for="item in props.row.peoples"
+              :key="item.phone"
+              class="merchant-users"
+            >
+                <el-col :span="4" style="display:flex;align-items:center;justify-content:center;">
+                  <el-avatar
+                    shape="square"
+                    :size="30"
+                    fit="cover"
+                    :src="item.avatar"
+                  />
+                </el-col>
+                <el-col :span="4">{{item.name}}</el-col>
+                <el-col :span="4">{{item.phone}}</el-col>
+                <el-col :span="4">{{item.email}}</el-col>
+                <el-col :span="8">
+                   <el-button type="success" v-if="item.status === 3" plain size="small">启用</el-button>
+                   <el-button type="primary" v-if="item.status === 1" plain size="small">禁用</el-button>
+                   <el-button type="danger" plain size="small">删除</el-button>
+                </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column
           header-align="center"
           align="center"
           prop="name"
-          :label="$t('table.name')"
+          :label="$t('table.merchantname')"
         />
         <el-table-column
           header-align="center"
           align="center"
-          prop="phone"
-          :label="$t('table.phone')"
+          prop="address"
+          :label="$t('table.address')"
         />
         <el-table-column
           header-align="center"
@@ -97,23 +110,11 @@
           :label="$t('table.email')"
         />
         <el-table-column
-          :label="$t('table.status')"
           header-align="center"
           align="center"
-          width="150px"
-        >
-          <template slot-scope="{row}">
-            <el-tag
-              :type="
-                statusList.filter((item) => item.value === row.status)[0].type
-              "
-            >
-              {{
-                statusList.filter((item) => item.value === row.status)[0].label
-              }}
-            </el-tag>
-          </template>
-        </el-table-column>
+          prop="phone"
+          :label="$t('table.phone')"
+        />
         <el-table-column
           label="操作"
           width="100px"
@@ -124,16 +125,17 @@
             <el-button
               type="primary"
               size="mini"
+              plain
               @click.native.stop="onEditor(scope.id)"
             >
-              编辑
+              {{ $t("table.btn.check") }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.limit"
@@ -211,12 +213,10 @@
         class="dialog-footer"
       >
         <el-button @click="dialogFormVisible = false">
-          {{ $t('table.cancel') }}
+          {{ $t("table.cancel") }}
         </el-button>
-        <el-button
-          type="primary"
-        >
-          {{ $t('table.confirm') }}
+        <el-button type="primary">
+          {{ $t("table.confirm") }}
         </el-button>
       </div>
     </el-dialog>
@@ -225,7 +225,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { getUsers, defaultUserData } from '@/api/users'
+import { getUsers, defaultUserData, getMerchants } from '@/api/users'
 import { getRoles } from '@/api/roles'
 import { IUserData, IRoleData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
@@ -240,9 +240,9 @@ export default class extends Vue {
   private tableKey = 0;
   private listLoading = false;
   private list: Array<IUserData> = [];
-  private roles: Array<IRoleData> = []
-  private dialogFormVisible = false
-  private dialogFormTitle = 'dialog.user_add'
+  private roles: Array<IRoleData> = [];
+  private dialogFormVisible = false;
+  private dialogFormTitle = 'dialog.user_add';
   private statusList = [
     { value: 1, label: '启用', type: 'success' },
     { value: 2, label: '冻结', type: '' },
@@ -250,7 +250,7 @@ export default class extends Vue {
   ];
 
   private total = 0;
-  private tempUserData = defaultUserData
+  private tempUserData = defaultUserData;
 
   private listQuery = {
     page: 1,
@@ -268,8 +268,8 @@ export default class extends Vue {
 
   private async getList() {
     this.listLoading = true
-    const { data } = await getUsers(this.listQuery)
-
+    const { data } = await getMerchants(this.listQuery)
+    console.log(data)
     this.list = data.items
     this.total = data.total
 
@@ -288,6 +288,10 @@ export default class extends Vue {
     if (prop === 'id') {
       this.sortByID(order)
     }
+  }
+
+  private expandChange(data: any) {
+    console.log(data)
   }
 
   private sortByID(order: string) {
@@ -311,4 +315,13 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.merchant-users {
+  display: flex;
+  align-items: center;
+  height:40px;
+  line-height:40px;
+  margin-bottom: 10px;
+  width:100%;
+}
+</style>
