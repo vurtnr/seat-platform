@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Layout from '@/layout/index.vue'
 
-import Home from '../views/Home.vue'
-
 Vue.use(VueRouter)
 
 export const constantRoutes: Array<RouteConfig> = [
@@ -54,7 +52,10 @@ export const constantRoutes: Array<RouteConfig> = [
     children: [
       {
         path: 'dashboard',
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'),
+        component: () =>
+          import(
+            /* webpackChunkName: "dashboard" */ '@/views/dashboard/index.vue'
+          ),
         name: 'Dashboard',
         meta: {
           title: 'dashboard',
@@ -68,6 +69,30 @@ export const constantRoutes: Array<RouteConfig> = [
 
 export const asyncRoutes: Array<RouteConfig> = [
   {
+    path: '/params',
+    component: Layout,
+    redirect: '/params/setting',
+    meta: {
+      title: 'params',
+      icon: 'zip',
+      alwaysShow: true
+    },
+    children: [
+      {
+        path: 'setting',
+        component: () =>
+          import(
+            /* webpackChunkName: "paramsSetting" */ '@/views/params/index.vue'
+          ),
+        name: '参数设置',
+        meta: {
+          title: 'setting',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
     path: '/system',
     component: Layout,
     redirect: '/system/user',
@@ -79,15 +104,18 @@ export const asyncRoutes: Array<RouteConfig> = [
     children: [
       {
         path: 'user',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/index.vue'),
+        component: () =>
+          import(/* webpackChunkName: "user" */ '@/views/user/index.vue'),
         name: '用户管理',
         meta: {
           title: 'user',
           roles: ['admin']
         }
-      }, {
+      },
+      {
         path: 'role',
-        component: () => import(/* webpackChunkName: "role" */ '@/views/role/index.vue'),
+        component: () =>
+          import(/* webpackChunkName: "role" */ '@/views/role/index.vue'),
         name: '角色管理',
         meta: {
           title: 'role',

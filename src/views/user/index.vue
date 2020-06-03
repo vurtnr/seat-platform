@@ -67,27 +67,56 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-row
-            :gutter="20"
               v-for="item in props.row.peoples"
               :key="item.phone"
+              :gutter="20"
               class="merchant-users"
             >
-                <el-col :span="4" style="display:flex;align-items:center;justify-content:center;">
-                  <el-avatar
-                    shape="square"
-                    :size="30"
-                    fit="cover"
-                    :src="item.avatar"
-                  />
-                </el-col>
-                <el-col :span="4">{{item.name}}</el-col>
-                <el-col :span="4">{{item.phone}}</el-col>
-                <el-col :span="4">{{item.email}}</el-col>
-                <el-col :span="8">
-                   <el-button type="success" v-if="item.status === 3" plain size="small">启用</el-button>
-                   <el-button type="primary" v-if="item.status === 1" plain size="small">禁用</el-button>
-                   <el-button type="danger" plain size="small">删除</el-button>
-                </el-col>
+              <el-col
+                :span="4"
+                style="display:flex;align-items:center;justify-content:center;"
+              >
+                <el-avatar
+                  shape="square"
+                  :size="30"
+                  fit="cover"
+                  :src="item.avatar"
+                />
+              </el-col>
+              <el-col :span="4">
+                {{ item.name }}
+              </el-col>
+              <el-col :span="4">
+                {{ item.phone }}
+              </el-col>
+              <el-col :span="4">
+                {{ item.email }}
+              </el-col>
+              <el-col :span="8">
+                <el-button
+                  v-if="item.status === 3"
+                  type="success"
+                  plain
+                  size="small"
+                >
+                  启用
+                </el-button>
+                <el-button
+                  v-if="item.status === 1"
+                  type="primary"
+                  plain
+                  size="small"
+                >
+                  禁用
+                </el-button>
+                <el-button
+                  type="danger"
+                  plain
+                  size="small"
+                >
+                  删除
+                </el-button>
+              </el-col>
             </el-row>
           </template>
         </el-table-column>

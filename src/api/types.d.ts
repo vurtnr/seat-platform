@@ -30,3 +30,11 @@ export interface IMerchantsData {
   photo?: Array<string>
   peoples?: Array<IUserData>
 }
+
+export interface IParams {
+  id: number
+  model: string
+  name:string,
+  status:number | null
+  desc:string
+}

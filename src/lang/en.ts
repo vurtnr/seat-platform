@@ -54,5 +54,11 @@ export default {
     description: 'Description',
     editPermission: 'Editor',
     delete: 'Delete'
+  },
+  tagsView: {
+    refresh: 'Refresh',
+    close: 'Close',
+    closeOthers: 'Close Others',
+    closeAll: 'Close All'
   }
 }
