@@ -4,8 +4,11 @@ export default {
     system: "系统管理",
     user: "用户管理",
     role: "角色管理",
-    params: "参数",
+    params: "功能",
     setting: "设置",
+    product: "智能设备",
+    list: "设备列表",
+    hardware: "硬件信息",
   },
   login: {
     title: "系统登录",
@@ -30,6 +33,8 @@ export default {
   dialog: {
     user_add: "新增用户",
     user_editor: "编辑用户",
+    hardware_add: "新增硬件",
+    add_equipment: "新增智能设备"
   },
   form: {
     user: {

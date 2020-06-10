@@ -67,8 +67,8 @@
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-row
-              v-for="item in props.row.peoples"
-              :key="item.phone"
+              v-for="item in props.row.userInfos"
+              :key="item.mobile"
               :gutter="20"
               class="merchant-users"
             >
@@ -80,17 +80,14 @@
                   shape="square"
                   :size="30"
                   fit="cover"
-                  :src="item.avatar"
+                  :src="item.avatarUrl"
                 />
               </el-col>
               <el-col :span="4">
-                {{ item.name }}
+                {{ item.nickName }}
               </el-col>
               <el-col :span="4">
-                {{ item.phone }}
-              </el-col>
-              <el-col :span="4">
-                {{ item.email }}
+                {{ item.mobile }}
               </el-col>
               <el-col :span="8">
                 <el-button
@@ -205,7 +202,7 @@
         >
           <el-input v-model="tempUserData.phone" />
         </el-form-item>
-        <el-form-item
+        <!-- <el-form-item
           :label="$t('form.user.role')"
           prop="role"
         >
@@ -222,7 +219,7 @@
               :value="item.key"
             />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="状态">
           <el-select
             v-model="tempUserData.status"
@@ -255,7 +252,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { getUsers, defaultUserData, getMerchants } from '@/api/users'
-import { getRoles } from '@/api/roles'
+// import { getRoles } from '@/api/roles'
 import { IUserData, IRoleData } from '@/api/types'
 import Pagination from '@/components/Pagination/index.vue'
 
@@ -269,7 +266,7 @@ export default class extends Vue {
   private tableKey = 0;
   private listLoading = false;
   private list: Array<IUserData> = [];
-  private roles: Array<IRoleData> = [];
+  // private roles: Array<IRoleData> = [];
   private dialogFormVisible = false;
   private dialogFormTitle = 'dialog.user_add';
   private statusList = [
@@ -282,8 +279,8 @@ export default class extends Vue {
   private tempUserData = defaultUserData;
 
   private listQuery = {
-    page: 1,
-    limit: 20,
+    page: 0,
+    pageSize: 20,
     name: undefined,
     status: undefined,
     sort: '+id'
@@ -291,16 +288,15 @@ export default class extends Vue {
 
   async created() {
     this.getList()
-    const { data } = await getRoles({})
-    this.roles = data
+    // const { data } = await getRoles({})
+    // this.roles = data
   }
 
   private async getList() {
     this.listLoading = true
-    const { data } = await getMerchants(this.listQuery)
-    console.log(data)
-    this.list = data.items
-    this.total = data.total
+    const { merchants, totalPage } = await getMerchants(this.listQuery)
+    this.list = merchants
+    this.total = totalPage
 
     setTimeout(() => {
       this.listLoading = false

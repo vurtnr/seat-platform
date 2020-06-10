@@ -34,7 +34,7 @@ export interface IMerchantsData {
 export interface IParams {
   id: number
   model: string
-  name:string,
-  status:number | null
-  desc:string
+  name: string
+  status: number | null
+  desc: string
 }

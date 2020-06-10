@@ -81,12 +81,48 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'setting',
         component: () =>
-          import(
-            /* webpackChunkName: "paramsSetting" */ '@/views/params/index.vue'
-          ),
+                 import(
+                   /* webpackChunkName: "paramsSetting" */ '@/views/params/index.vue'
+                 ),
         name: '参数设置',
         meta: {
           title: 'setting',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
+    path: '/product',
+    component: Layout,
+    redirect: '/product/list',
+    meta: {
+      title: 'product',
+      icon: 'zip',
+      alwaysShow: true
+    },
+    children: [
+      {
+        path: 'list',
+        component: () =>
+                 import(
+                   /* webpackChunkName: "paramsSetting" */ '@/views/product/list.vue'
+                 ),
+        name: '设备列表',
+        meta: {
+          title: 'list',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'hardware',
+        component: () =>
+                 import(
+                   /* webpackChunkName: "paramsSetting" */ '@/views/product/hardware.vue'
+                 ),
+        name: '硬件列表',
+        meta: {
+          title: 'hardware',
           roles: ['admin']
         }
       }
@@ -105,7 +141,9 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'user',
         component: () =>
-          import(/* webpackChunkName: "user" */ '@/views/user/index.vue'),
+                 import(
+                   /* webpackChunkName: "user" */ '@/views/user/index.vue'
+                 ),
         name: '用户管理',
         meta: {
           title: 'user',
@@ -115,7 +153,9 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'role',
         component: () =>
-          import(/* webpackChunkName: "role" */ '@/views/role/index.vue'),
+                 import(
+                   /* webpackChunkName: "role" */ '@/views/role/index.vue'
+                 ),
         name: '角色管理',
         meta: {
           title: 'role',

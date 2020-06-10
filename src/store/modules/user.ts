@@ -15,12 +15,12 @@ export interface UserState {
 
 @Module({ dynamic: true, store, name: 'user' })
 class User extends VuexModule implements UserState {
-  public token = getToken() || ''
-  public name = ''
-  public avatar = ''
-  public introduction = ''
-  public roles: string[] = []
-  public email = ''
+  public token = getToken() || '';
+  public name = '';
+  public avatar = '';
+  public introduction = '';
+  public roles: string[] = [];
+  public email = '';
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -52,13 +52,17 @@ class User extends VuexModule implements UserState {
     this.email = email
   }
 
-  @Action
-  public async Login(userInfo: {username: string, password: string}) {
-    let { username, password } = userInfo
-    username = username.trim()
-    const { data } = await login({ username, password })
-    setToken(data.accessToken)
-    this.SET_TOKEN(data.accessToken)
+  @Action({ rawError: true })
+  public async Login(params: { username: string, password: string }) {
+    let { username: id, password } = params
+    id = id.trim()
+    const data = await login({
+      id,
+      password,
+      messageType: 'LOGIN_REQUEST'
+    })
+    setToken(data.token)
+    this.SET_TOKEN(data.token)
   }
 
   @Action
@@ -73,19 +77,22 @@ class User extends VuexModule implements UserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const { data } = await getUserInfo({/* Your params here */})
-    if (!data) {
-      throw Error('Verification failed, please Login again.')
-    }
-    const { roles, name, avatar, introduction, email } = data.user
-    if (!roles || roles.length <= 0) {
-      throw Error('GetUserInfo: roles must be a non-null array!')
-    }
-    this.SET_ROLES(roles)
-    this.SET_NAME(name)
-    this.SET_AVATAR(avatar)
-    this.SET_INTRODUCTION(introduction)
-    this.SET_EMAIL(email)
+    // const { data } = await getUserInfo({
+    //   /* Your params here */
+    // });
+    // if (!data) {
+    //   throw Error("Verification failed, please Login again.");
+    // }
+    // const { roles, name, avatar, introduction, email } = data.user;
+    // if (!roles || roles.length <= 0) {
+    //   throw Error("GetUserInfo: roles must be a non-null array!");
+    // }
+
+    this.SET_ROLES(['admin'])
+    this.SET_NAME('Super Admin')
+    this.SET_AVATAR('https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+    this.SET_INTRODUCTION('I am a super administrator')
+    this.SET_EMAIL('admin@test.com')
   }
 
   @Action

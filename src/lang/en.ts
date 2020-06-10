@@ -1,64 +1,71 @@
 export default {
   route: {
-    dashboard: 'Dashboard',
-    system: 'System',
-    user: 'User',
-    role: 'Role'
+    dashboard: "Dashboard",
+    system: "System",
+    user: "User",
+    role: "Role",
+    params: "Params",
+    setting: "Setting",
+    product: "Product",
+    list: "Pro List",
+    hardware: "Hardware",
   },
   login: {
-    title: 'Login Form',
-    logIn: 'Login',
-    username: 'User Name',
-    password: 'Password'
+    title: "Login Form",
+    logIn: "Login",
+    username: "User Name",
+    password: "Password",
   },
   table: {
-    name: 'U name',
-    merchantname: 'Merchants',
-    uname: 'User Name',
-    phone: 'Phone',
-    email: 'Email',
-    status: 'Status',
-    cancel: 'Cancel',
-    confirm: 'Confirm',
-    address: 'Address',
+    name: "U name",
+    merchantname: "Merchants",
+    uname: "User Name",
+    phone: "Phone",
+    email: "Email",
+    status: "Status",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    address: "Address",
     btn: {
-      check: 'Check'
-    }
+      check: "Check",
+    },
   },
   dialog: {
-    user_add: 'Add',
-    user_editor: 'Editor'
+    user_add: "Add",
+    user_editor: "Editor",
+    hardware_add: "Add Hardware",
+    add_equipment: 'Add Equipment'
   },
   form: {
     user: {
-      name: 'User Name',
-      password: 'Password',
-      checkPass: 'Check Password',
-      email: 'Email',
-      phone: 'Phone',
-      role: 'Role'
-    }
+      name: "User Name",
+      password: "Password",
+      checkPass: "Check Password",
+      email: "Email",
+      phone: "Phone",
+      role: "Role",
+    },
   },
   navbar: {
-    logOut: 'Log Out',
-    dashboard: 'Dashboard',
-    github: 'Github',
-    theme: 'Theme',
-    size: 'Global Size',
-    profile: 'Profile'
+    logOut: "Log Out",
+    dashboard: "Dashboard",
+    github: "Github",
+    theme: "Theme",
+    size: "Global Size",
+    profile: "Profile",
   },
   permission: {
-    createRole: 'New Role',
-    roleKey: 'Role Key',
-    roleName: 'Role Name',
-    description: 'Description',
-    editPermission: 'Editor',
-    delete: 'Delete'
+    createRole: "New Role",
+    roleKey: "Role Key",
+    roleName: "Role Name",
+    description: "Description",
+    editPermission: "Editor",
+    delete: "Delete",
   },
   tagsView: {
-    refresh: 'Refresh',
-    close: 'Close',
-    closeOthers: 'Close Others',
-    closeAll: 'Close All'
-  }
-}
+    refresh: "Refresh",
+    close: "Close",
+    closeOthers: "Close Others",
+    closeAll: "Close All",
+  },
+};

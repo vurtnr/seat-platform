@@ -7,8 +7,8 @@ import { IParamsState } from './modules/params'
 Vue.use(Vuex)
 
 export interface RootState{
-  app: AppState,
-  params: IParamsState,
+  app: AppState
+  params: IParamsState
   user: UserState
 }
 

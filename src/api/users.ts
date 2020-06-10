@@ -17,23 +17,27 @@ export const defaultUserData: IUserData = {
 
 export const login = (data: any) =>
   request({
-    url: '/users/login',
+    url: '/dev-api/login',
     method: 'post',
     data
   })
 
 export const getUsers = (params: any) =>
   request({
-    url: '/users',
+    url: '/dev-api/users',
     method: 'get',
     params
   })
 
 export const getMerchants = (params: any) =>
   request({
-    url: '/merchants',
-    method: 'get',
-    params
+    url: '/dev-api/merchants',
+    method: 'post',
+    data: {
+      ...params,
+      messageType: 'GET_MERCHANTS_REQUEST',
+      needUserInfo: true
+    }
   })
 
 export const getUserInfo = (data: any) =>

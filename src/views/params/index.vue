@@ -67,9 +67,6 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-button size="mini">
-            添加事件进程
-          </el-button>
           <el-button
             size="mini"
             type="danger"
@@ -80,7 +77,7 @@
       </el-table-column>
     </el-table>
     <el-dialog
-      title="新增板材"
+      title="新增功能"
       :visible.sync="dialogFormVisible"
       width="30%"
     >
@@ -90,45 +87,81 @@
           style="width:100%;"
         >
           <el-form-item
-            label="型号"
-            label-width="60px"
+            label-width="120px"
+            label="功能"
           >
-            <el-input
-              v-model="form.number"
-              autocomplete="off"
-            />
+            <el-select
+              v-model="funcType"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item
-            label="名称"
-            label-width="60px"
-          >
-            <el-input
-              v-model="form.name"
-              autocomplete="off"
-            />
-          </el-form-item>
-          <el-form-item
-            label="状态"
-            label-width="60px"
-          >
-            <el-input
-              v-model="form.status"
-              autocomplete="off"
-            />
-          </el-form-item>
-          <el-form-item
-            label="描述"
-            label-width="60px"
-          >
-            <el-input
-              v-model="form.describe"
-              type="textarea"
-              placeholder="请输入内容"
-              rows="10"
-              maxlength="100"
-              show-word-limit
-            />
-          </el-form-item>
+          <template v-if="funcType === 1 || funcType === 2">
+            <el-form-item
+              label-width="120px"
+              label="阀数"
+            >
+              <el-select
+                v-model="piston"
+                placeholder="请选择"
+                @change="change"
+              >
+                <el-option
+                  label="1"
+                  value="1"
+                />
+                <el-option
+                  label="2"
+                  value="2"
+                />
+                <el-option
+                  label="3"
+                  value="3"
+                />
+              </el-select>
+            </el-form-item>
+          </template>
+          <template v-if="funcData.length > 0">
+            <el-form-item
+              label-width="120px"
+              label="硬件设置"
+            >
+              <el-table
+                :data="funcData"
+                style="width: 100%"
+              >
+                <el-table-column
+                  prop="name"
+                  label="名称"
+                  width="80px"
+                />
+                <el-table-column
+                  prop="type"
+                  label="类别"
+                >
+                  <template slot-scope="scope">
+                    <el-select
+                      v-model="scope.row.funcType"
+                      placeholder="请选择"
+                    >
+                      <el-option
+                        v-for="item in scope.row.type"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-form-item>
+          </template>
         </el-form>
         <div
           slot="footer"
@@ -139,7 +172,7 @@
           </el-button>
           <el-button
             type="primary"
-            @click="dialogFormVisible = false"
+            @click="save"
           >
             确 定
           </el-button>
@@ -152,6 +185,20 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { PramsModule } from '@/store/modules/params'
+
+interface IFunc {
+  value: number
+  label: string
+}
+
+interface IFuncData {
+  id: number
+  name: string
+  type: Array<Record<string, any>>
+  flag: boolean
+  funcType?: number
+}
+
 @Component({
   name: 'setting'
 })
@@ -160,10 +207,19 @@ export default class extends Vue {
     return PramsModule.params
   }
 
+  private options: Array<IFunc> = [
+    { value: 1, label: '大便冲水' },
+    { value: 2, label: '小便冲水' }
+  ];
+
   private formInline: Record<string, any> = {};
   private tableData: Array<Record<string, any>> = [];
   private dialogFormVisible = false;
   private form: Record<string, any> = {};
+  private funcType = null;
+  private funcData: Array<IFuncData> = [];
+  private piston = null;
+
   private onSubmit() {
     console.log(1111)
   }
@@ -173,7 +229,55 @@ export default class extends Vue {
   }
 
   async mounted() {
-    await PramsModule.getParams()
+    // await PramsModule.getParams()
+  }
+
+  private save() {
+    console.log(this.funcData)
+  }
+
+  private change() {
+    for (let i = 0; i < this.piston; i++) {
+      const data = {
+        id: i + 1,
+        name: i + 1 + '号阀',
+        type: [
+          { value: '01', label: '单稳态' },
+          { value: '02', label: '双稳态' }
+        ],
+        flag: false
+      }
+      this.funcData.push(data)
+    }
+    // this.funcData = [
+    //   {
+    //     id: 1,
+    //     name: '1号阀',
+    //     type: [
+    //       { value: '01', label: '单稳态' },
+    //       { value: '02', label: '双稳态' }
+    //     ],
+    //     flag: false
+    //   },
+    //   {
+    //     id: 2,
+    //     name: '2号阀',
+    //     type: [
+    //       { value: '01', label: '单稳态' },
+    //       { value: '02', label: '双稳态' }
+    //     ],
+    //     flag: false
+    //   },
+    //   {
+    //     id: 3,
+    //     name: '3号阀',
+    //     type: [
+    //       { value: '01', label: '单稳态' },
+    //       { value: '02', label: '双稳态' }
+    //     ],
+    //     flag: false
+    //   }
+    // ]
   }
 }
 </script>
@@ -183,11 +287,12 @@ export default class extends Vue {
   display: flex;
   height: 500px;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  .transfer-footer {
-    margin-left: 20px;
-    padding: 6px 5px;
+  position: relative;
+  .dialog-footer {
+    position: absolute;
+    bottom: 0;
   }
 }
 a {

@@ -4,6 +4,7 @@
     "private": true,
     "scripts": {
         "dev": "concurrently \"npm:mock\" \"vue-cli-service serve\"",
+        "start": "vue-cli-service serve",
         "build": "vue-cli-service build",
         "lint": "vue-cli-service lint",
         "mock": "cd mock && ts-node-dev mock-server.ts",
