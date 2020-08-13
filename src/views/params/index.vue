@@ -161,6 +161,26 @@
                 </el-table-column>
               </el-table>
             </el-form-item>
+            <el-form-item
+              label-width="120px"
+              label="执行时间(s)"
+            >
+              <el-input v-model="processTime">
+                <template slot="append">
+                  秒
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item
+              label-width="120px"
+              label="等待时间"
+            >
+              <el-input v-model="waitTime">
+                <template slot="append">
+                  秒
+                </template>
+              </el-input>
+            </el-form-item>
           </template>
         </el-form>
         <div
@@ -219,6 +239,8 @@ export default class extends Vue {
   private funcType = null;
   private funcData: Array<IFuncData> = [];
   private piston = null;
+  private waitTime = 0;
+  private processTime = 0;
 
   private onSubmit() {
     console.log(1111)
@@ -237,6 +259,7 @@ export default class extends Vue {
   }
 
   private change() {
+    this.funcData = []
     for (let i = 0; i < this.piston; i++) {
       const data = {
         id: i + 1,
@@ -285,7 +308,7 @@ export default class extends Vue {
 <style lang="scss" scoped>
 .dialog-container {
   display: flex;
-  height: 500px;
+  height: 600px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;

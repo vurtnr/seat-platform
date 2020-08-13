@@ -9,6 +9,7 @@ export default {
     product: "智能设备",
     list: "设备列表",
     hardware: "硬件信息",
+    production: "产品列表",
   },
   login: {
     title: "系统登录",
@@ -34,7 +35,8 @@ export default {
     user_add: "新增用户",
     user_editor: "编辑用户",
     hardware_add: "新增硬件",
-    add_equipment: "新增智能设备"
+    add_equipment: "新增智能设备",
+    product_dialog_title: "新增编辑产品",
   },
   form: {
     user: {

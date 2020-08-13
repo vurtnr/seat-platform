@@ -9,6 +9,7 @@ export default {
     product: "Product",
     list: "Pro List",
     hardware: "Hardware",
+    production: "Production",
   },
   login: {
     title: "Login Form",
@@ -34,7 +35,8 @@ export default {
     user_add: "Add",
     user_editor: "Editor",
     hardware_add: "Add Hardware",
-    add_equipment: 'Add Equipment'
+    add_equipment: "Add Equipment",
+    product_dialog_title: "Product Infomation"
   },
   form: {
     user: {

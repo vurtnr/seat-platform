@@ -24,7 +24,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const res = response.data
-    console.log(res)
     if (res.result === 1) {
       Message({
         message: res.error || 'Error',

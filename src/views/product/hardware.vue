@@ -112,6 +112,19 @@
           label-width="80px"
           style="width:500px"
         >
+          <el-form-item label="硬件类别">
+            <el-select
+              v-model="form.hardwareType"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="硬件名称">
             <el-input v-model="form.name" />
           </el-form-item>
@@ -190,6 +203,20 @@ export default class extends Vue {
   private form: Record<string, any> = {};
   private dialogImageUrl = '';
   private dialogVisible = false;
+  private options: Array<Record<string, any>> = [
+    {
+      value: '选项1',
+      label: '阀'
+    },
+    {
+      value: '选项2',
+      label: '控制器'
+    },
+    {
+      value: '选项3',
+      label: '喷管'
+    }
+  ];
 
   private onSubmit() {
     console.log(111)

@@ -81,9 +81,9 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'setting',
         component: () =>
-                 import(
-                   /* webpackChunkName: "paramsSetting" */ '@/views/params/index.vue'
-                 ),
+          import(
+            /* webpackChunkName: "paramsSetting" */ '@/views/params/index.vue'
+          ),
         name: '参数设置',
         meta: {
           title: 'setting',
@@ -105,9 +105,9 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'list',
         component: () =>
-                 import(
-                   /* webpackChunkName: "paramsSetting" */ '@/views/product/list.vue'
-                 ),
+          import(
+            /* webpackChunkName: "paramsSetting" */ '@/views/product/list.vue'
+          ),
         name: '设备列表',
         meta: {
           title: 'list',
@@ -117,12 +117,24 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'hardware',
         component: () =>
-                 import(
-                   /* webpackChunkName: "paramsSetting" */ '@/views/product/hardware.vue'
-                 ),
+          import(
+            /* webpackChunkName: "paramsSetting" */ '@/views/product/hardware.vue'
+          ),
         name: '硬件列表',
         meta: {
           title: 'hardware',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'production',
+        component: () =>
+          import(
+            /* webpackChunkName: "paramsSetting" */ '@/views/product/production.vue'
+          ),
+        name: '产品列表',
+        meta: {
+          title: 'production',
           roles: ['admin']
         }
       }
@@ -141,9 +153,7 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'user',
         component: () =>
-                 import(
-                   /* webpackChunkName: "user" */ '@/views/user/index.vue'
-                 ),
+          import(/* webpackChunkName: "user" */ '@/views/user/index.vue'),
         name: '用户管理',
         meta: {
           title: 'user',
@@ -153,9 +163,7 @@ export const asyncRoutes: Array<RouteConfig> = [
       {
         path: 'role',
         component: () =>
-                 import(
-                   /* webpackChunkName: "role" */ '@/views/role/index.vue'
-                 ),
+          import(/* webpackChunkName: "role" */ '@/views/role/index.vue'),
         name: '角色管理',
         meta: {
           title: 'role',
