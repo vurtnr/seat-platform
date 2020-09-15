@@ -1,4 +1,4 @@
-import {IProduction} from './production'
+import { IProduction } from './production'
 
 export {
   IDevelopmentBoard,
@@ -6,32 +6,30 @@ export {
   IAccesoriesItem,
   IAccessoriesPro,
   IAccessories,
-  IProduction,
-} from "./production";
+  IProduction
+} from './production'
 
 export interface IBase {
   messageType?: string
 }
 
-
 export interface IParams extends IBase {
-  productId: number;
+  productId: number
 }
 
 export interface IBoardParams extends IBase {
-  id: number;
+  id: number
 }
 
-
 export interface IAccessoriesParams extends IBase {
-  accessoryTypeId:number
-  needAccessoryDetail?:boolean
-  page:number
-  pageSize:number
+  accessoryTypeId: number
+  needAccessoryDetail?: boolean
+  page: number
+  pageSize: number
 }
 
 export interface IPageation extends IBase {
-  needAccessoryInterface?: boolean;
-  page: number;
-  pageSize: number;
+  needAccessoryInterface?: boolean
+  page: number
+  pageSize: number
 }

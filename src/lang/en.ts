@@ -36,7 +36,9 @@ export default {
     user_editor: "Editor",
     hardware_add: "Add Hardware",
     add_equipment: "Add Equipment",
-    product_dialog_title: "Product Infomation"
+    product_dialog_title: "Product Infomation",
+    process_dialog_title: 'Product Process Step',
+    event_dialog_title: 'Button Event Setting'
   },
   form: {
     user: {

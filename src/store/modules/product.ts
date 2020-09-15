@@ -3,37 +3,40 @@ import {
   getDevelopmentBoard,
   getAccessories,
   getDevelopmentBoards,
-} from "@/api/product";
+  getProductInfo,
+  getProductDefinition
+} from '@/api/product'
 import {
   VuexModule,
   Module,
   Action,
   Mutation,
-  getModule,
-} from "vuex-module-decorators";
+  getModule
+} from 'vuex-module-decorators'
 import {
-  IProductOriginal,
+  IProduction,
   IDevelopmentBoard,
   IPageation,
   IBoardParams,
   IAccessoriesParams,
-  IAccessoriesPro,
-} from "@/interface";
+  IAccessoriesPro
+} from '@/interface'
 import store from '@/store'
 
 export interface IProductState {
-  products: Array<IProductOriginal>;
-  productInfo: IProductOriginal;
-  developmentBoards: Array<IDevelopmentBoard>;
-  developmentBoard: IDevelopmentBoard;
-  accessories: Array<IAccessoriesPro>;
+  products: Array<IProduction>
+  product: IProduction
+  developmentBoards: Array<IDevelopmentBoard>
+  developmentBoard: IDevelopmentBoard
+  accessories: Array<IAccessoriesPro>
+  processInfo: any
 }
- 
+
 @Module({ dynamic: true, store, name: "product" })
 class Product extends VuexModule implements IProductState {
   accessories: IAccessoriesPro[] = [];
-  products: IProductOriginal[] = [];
-  productInfo: IProductOriginal = {};
+  products: IProduction[] = [];
+  product: IProduction = {}
   developmentBoards: IDevelopmentBoard[] = [];
   developmentBoard: IDevelopmentBoard = {
     id: 0,
@@ -42,14 +45,16 @@ class Product extends VuexModule implements IProductState {
     accessoryInterfaces: [],
   };
 
+  processInfo: any = {};
+
   @Mutation
-  setProducts(data: Array<IProductOriginal>) {
+  setProducts(data: Array<IProduction>) {
     this.products = data;
   }
 
   @Mutation
-  setProductInfo(data: IProductOriginal) {
-    this.productInfo = data;
+  setProduct(data: IProduction) {
+    this.product = data;
   }
 
   @Mutation
@@ -58,14 +63,18 @@ class Product extends VuexModule implements IProductState {
   }
 
   @Mutation
-  setAccessories(data:Array<IAccessoriesPro>){
-    this.accessories = data
+  setAccessories(data: Array<IAccessoriesPro>) {
+    this.accessories = data;
   }
 
   @Mutation
   setDevelopmentBoards(data: Array<IDevelopmentBoard>) {
-    console.log("data:", data);
     this.developmentBoards = data;
+  }
+
+  @Mutation
+  setProcessInfo(data: any) {
+    this.processInfo = data;
   }
 
   @Action({ commit: "setProducts", rawError: true })
@@ -92,8 +101,21 @@ class Product extends VuexModule implements IProductState {
   @Action({ commit: "setAccessories", rawError: true })
   async getAccessories(payload: IAccessoriesParams) {
     const { accessories } = await getAccessories(payload);
-    return accessories
+    return accessories;
+  }
+
+  @Action({ commit: "setProduct", rawError: true })
+  async getProductInfo(payload: any) {
+    const { product } = await getProductInfo(payload);
+    console.log(product)
+    return product;
+  }
+
+  @Action({ commit: "setProcessInfo", rawError: true })
+  async getProcessInfo(payload: any) {
+    const { product } = await getProductDefinition(payload);
+    return product;
   }
 }
 
-export const ProductModule = getModule(Product);
+export const ProductModule = getModule(Product)

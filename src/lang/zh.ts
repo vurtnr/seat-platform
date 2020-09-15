@@ -37,6 +37,8 @@ export default {
     hardware_add: "新增硬件",
     add_equipment: "新增智能设备",
     product_dialog_title: "新增编辑产品",
+    process_dialog_title: "流程步骤编辑",
+    event_dialog_title: '按钮事件设置'
   },
   form: {
     user: {
