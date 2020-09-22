@@ -128,7 +128,7 @@
     >
       <ConfigurationProcess ref="process" :id="currentId" />
       <div slot="footer" class="dialog-footer">
-        <el-button>
+        <el-button @click="processVisible = false">
           取 消
         </el-button>
         <el-button @click="saveProcessList">
@@ -145,7 +145,7 @@
     >
     <button-event-setting ref="events" :id="currentId" />
     <div slot="footer" class="dialog-footer">
-        <el-button>
+        <el-button @click="eventVisible = false">
           取 消
         </el-button>
         <el-button @click="saveEvents">
@@ -320,7 +320,8 @@ export default class extends Vue {
     const processes = new Array();
     for (let key in obj) {
       const steps = new Array();
-      obj[key].stepList.forEach((step: any, index: number) => {
+      const {processEvents,propertyValues,stepList} = obj[key]
+      stepList.forEach((step: any, index: number) => {
         const subprocessType = originSubprocesses[step.subprocessTypeId];
         let stepItem: any = {};
         const { eventId, nextStepOnDone, nextStepOnError } = step;
@@ -337,7 +338,7 @@ export default class extends Vue {
         }
         steps.push(stepItem);
       });
-      processes.push({ steps });
+      processes.push({ propertyValues,processEvents,steps });
     }
 
     const payload_product: any = this.product;
@@ -380,7 +381,9 @@ export default class extends Vue {
     payload_product.processes.processes = processes;
     delete payload_product.subProcesses.stepTypes;
     delete payload_product.subProcesses.types;
+    delete payload_product.processes.eventTypes;
     payload_product.subProcesses.subProcesses = types;
+    console.log(payload_product)
     const res: any = await saveProduct({ product: payload_product });
     if (res.result === 0) {
       this.$message({
@@ -390,11 +393,40 @@ export default class extends Vue {
       this.processVisible = false;
       this.$refs.process.steps = {};
       this.$refs.process.originSubprocesses = {};
+    }else{
+      this.$message({
+        message:'保存失败，请刷新后重试',
+        type:'warning'
+      })
+      return false;
     }
   }
 
-  private saveEvents(){
-    console.log(this.$refs.events.eventValues)
+  private async saveEvents(){
+    const payload_product: any = this.product;
+    const { accessories:accessArray, developmentBoard } = payload_product;
+    delete payload_product.accessories;
+    delete payload_product.developmentBoard;
+    delete payload_product.subProcesses.stepTypes;
+    delete payload_product.subProcesses.types;
+    payload_product['developmentBoard'] = { id:developmentBoard.id}
+    payload_product.processTriggers.events = {};
+    payload_product.processTriggers.triggers = this.$refs.events.eventValues;
+    const res: any = await saveProduct({ product: payload_product });
+    if (res.result === 0) {
+      this.$message({
+        message: "保存成功",
+        type: "success",
+      });
+      this.eventVisible = false;
+      this.$refs.events.eventValues = {};
+    }else{
+      this.$message({
+        message:'保存失败，请刷新后重试',
+        type:'warning'
+      })
+      return false;
+    }
   }
 }
 </script>

@@ -107,7 +107,6 @@ class Product extends VuexModule implements IProductState {
   @Action({ commit: "setProduct", rawError: true })
   async getProductInfo(payload: any) {
     const { product } = await getProductInfo(payload);
-    console.log(product)
     return product;
   }
 

@@ -150,22 +150,6 @@ export default class extends Vue {
         font-weight: bold;
         margin-right: 10px;
       }
-      // .add-btn {
-      //   display: inline-block;
-      //   width: 25px;
-      //   height: 25px;
-      //   line-height: 25px;
-      //   text-align: center;
-      //   cursor: pointer;
-      //   color: #67c23a;
-      //   border-radius: 50%;
-      //   border: 1px solid #67c23a;
-      //   &:hover {
-      //     background: #67c23a;
-      //     color: #ffffff;
-      //     border: none;
-      //   }
-      // }
     }
     .child-item {
       width: 100%;

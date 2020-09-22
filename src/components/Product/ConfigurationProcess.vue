@@ -15,17 +15,21 @@
           v-for="i in Object.keys(steps)"
           :key="i"
         >
-          <span>{{ steps[i].name }}</span>
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="添加步骤"
-            placement="top"
-          >
-            <div class="add-btn" @click="setCurrentStep(steps[i])">
-              <i class="el-icon-plus"></i>
+          <div style="display:flex;align-items:center;justify-content:center;">
+            <span style="flex:1;">{{ steps[i].name }}</span>
+            <el-tooltip effect="dark" content="添加步骤" placement="top">
+              <div class="add-btn" @click="setCurrentStep(steps[i])">
+                <i class="el-icon-plus"></i>
+              </div>
+            </el-tooltip>
+
+            <div
+              class="add-btn"
+              @click="showEditorProcessEventAndSubprocess(i)"
+            >
+              <i class="el-icon-more"></i>
             </div>
-          </el-tooltip>
+          </div>
         </div>
       </div>
       <div
@@ -65,8 +69,7 @@
                     label="子流程预设参数"
                     v-if="
                       originSubprocesses[v.subprocessTypeId] &&
-                        originSubprocesses[v.subprocessTypeId]
-                          .subprocesses
+                        originSubprocesses[v.subprocessTypeId].subprocesses
                     "
                   >
                     <el-select
@@ -86,51 +89,60 @@
                   <el-form-item
                     v-if="
                       v.subprocessParamsIndex !== null &&
-                        originSubprocesses[v.subprocessTypeId]
-                          .subprocesses[v.subprocessParamsIndex].steps
-                          .length <
-                          originSubprocesses[v.subprocessTypeId]
-                            .subprocesses[v.subprocessParamsIndex]
-                            .maxStepsLength
+                        originSubprocesses[v.subprocessTypeId].subprocesses &&
+                        originSubprocesses[v.subprocessTypeId].subprocesses[
+                          v.subprocessParamsIndex
+                        ].steps.length <
+                          originSubprocesses[v.subprocessTypeId].subprocesses[
+                            v.subprocessParamsIndex
+                          ].maxStepsLength
                     "
                   >
                     <el-button
                       type="text"
                       size="mini"
-                      @click="addSubprocessesStep(v.subprocessTypeId,v.subprocessParamsIndex)"
+                      @click="
+                        addSubprocessesStep(
+                          v.subprocessTypeId,
+                          v.subprocessParamsIndex
+                        )
+                      "
                       >添加步骤</el-button
                     >
                   </el-form-item>
                 </el-form>
               </div>
-              <div class="subprocess-type-params" v-if="v.subprocessTypeId&&
-                        !originSubprocesses[v.subprocessTypeId]
-                          .subprocesses">
+              <div
+                class="subprocess-type-params"
+                v-if="
+                  v.subprocessTypeId &&
+                    !originSubprocesses[v.subprocessTypeId].subprocesses
+                "
+              >
                 <SubProcessForm
-                        :subProcessStepProperties="
-                          originSubprocesses[
-                    v.subprocessTypeId
-                  ].property
-                        "
-                        :currentStepProperties="originSubprocesses[
-                    v.subprocessTypeId
-                  ].properties"
-                      />
+                  :subProcessStepProperties="
+                    originSubprocesses[v.subprocessTypeId].property
+                  "
+                  :currentStepProperties="
+                    originSubprocesses[v.subprocessTypeId].properties
+                  "
+                />
               </div>
               <div
                 class="subprocess-list"
                 v-if="
                   v.subprocessTypeId !== null &&
-                    v.subprocessParamsIndex !== null && originSubprocesses[
-                    v.subprocessTypeId
-                  ].subprocesses[v.subprocessParamsIndex].steps.length > 0
+                    v.subprocessParamsIndex !== null &&
+                    originSubprocesses[v.subprocessTypeId].subprocesses &&
+                    originSubprocesses[v.subprocessTypeId].subprocesses[
+                      v.subprocessParamsIndex
+                    ].steps.length > 0
                 "
               >
                 <div
                   class="list-item"
-                  v-for="(item, odx) in originSubprocesses[
-                    v.subprocessTypeId
-                  ].subprocesses[v.subprocessParamsIndex].steps"
+                  v-for="(item, odx) in originSubprocesses[v.subprocessTypeId]
+                    .subprocesses[v.subprocessParamsIndex].steps"
                   :key="odx"
                 >
                   <div style="width:100%;display:flex;align-items:center;">
@@ -142,18 +154,17 @@
                     >
                       <SubProcessForm
                         :subProcessStepProperties="
-                          originSubprocesses[
-                    v.subprocessTypeId
-                  ].subprocesses[v.subprocessParamsIndex].steps[odx]
+                          originSubprocesses[v.subprocessTypeId].subprocesses[
+                            v.subprocessParamsIndex
+                          ].steps[odx]
                         "
-                        :currentStepProperties="originSubprocesses[
-                    v.subprocessTypeId
-                  ].subprocesses[v.subprocessParamsIndex].properties"
+                        :currentStepProperties="
+                          originSubprocesses[v.subprocessTypeId].subprocesses[
+                            v.subprocessParamsIndex
+                          ].properties
+                        "
                       />
-                      <div
-                        class="edit-button"
-                        slot="reference"
-                      >
+                      <div class="edit-button" slot="reference">
                         <i class="el-icon-edit"></i>
                       </div>
                     </el-popover>
@@ -211,6 +222,30 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      :visible.sync="subprocessShow"
+      title="子流程"
+      top="5vh"
+      width="55%"
+      append-to-body
+    >
+      <process-step-property
+        v-loading="saveEvents"
+        ref="events"
+        :properties="processProperties"
+        :eventTypes="processEventTypes"
+        :originSubprocesses="originSubprocesses"
+        @addSubprocessesStep="addSubprocessesStep"
+      />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="subprocessShow = false">
+          取 消
+        </el-button>
+        <el-button @click="saveProcessEventsAndSubprocess">
+          保存
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -218,10 +253,11 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { ProductModule } from "@/store/modules/product";
 import SubProcessForm from "./SubprocessForm.vue";
+import ProcessStepProperty from "./ProcessStepProperty.vue";
 
 @Component({
   name: "ConfigurationProcess",
-  components: { SubProcessForm },
+  components: { SubProcessForm, ProcessStepProperty },
 })
 export default class extends Vue {
   @Prop({ type: Number, default: 0 }) readonly id!: number;
@@ -233,7 +269,11 @@ export default class extends Vue {
   private currentProcessStepItem: any = {};
   private currentProcessStepIndex: number = 0;
   private originSubprocesses: any[] = [];
-
+  private subprocessShow: boolean = false;
+  private processProperties: any[] = [];
+  private processEventTypes: any[] = [];
+  private currentStepId: any = null;
+  private saveEvents:boolean = false;
 
   get product() {
     return ProductModule.product;
@@ -245,12 +285,17 @@ export default class extends Vue {
   async mounted() {
     this.loading = true;
     await ProductModule.getProductInfo({ productId: this.id });
-    const { developmentBoard, accessories } = this.product;
+    const {
+      developmentBoard,
+      accessories,
+      processes: { eventTypes, properties },
+    } = this.product;
     const payload: any = {};
     payload.developmentBoardId = developmentBoard.id;
     payload.accessories = accessories;
+    this.processProperties = properties;
+    this.processEventTypes = eventTypes;
     await ProductModule.getProcessInfo(payload);
-
     new Promise((resolve) => {
       const { subProcesses } = this.processInfo;
       const { subProcesses: subp, types, stepTypes } = subProcesses;
@@ -274,19 +319,19 @@ export default class extends Vue {
               types[i].name + " 参数" + (parseInt(j) + 1);
             subprocessArray[j].steps = [];
           }
-        }else{
-          const {properties} = types[i]
-          const property:any = Object.create({});
-          if(properties.length > 0){
-            for(let p in properties){
-              if(properties[p].valueType.name === 'BOOL'){
-                property[properties[p].id] = false
-              }else{
-                property[properties[p].id] = null
+        } else {
+          const { properties } = types[i];
+          const property: any = Object.create({});
+          if (properties.length > 0) {
+            for (let p in properties) {
+              if (properties[p].valueType.name === "BOOL") {
+                property[properties[p].id] = false;
+              } else {
+                property[properties[p].id] = null;
               }
             }
           }
-          types[i].property = property
+          types[i].property = property;
         }
         if (subp[types[i].id]) {
           types[i].subprocesses = subprocessArray;
@@ -320,8 +365,8 @@ export default class extends Vue {
         currentStep.stepList.push({
           id: new Date().getTime(),
           name: "步骤" + (index + 1),
-          subprocessTypeId:null,
-          subprocessParamsIndex:null,
+          subprocessTypeId: null,
+          subprocessParamsIndex: null,
           // subProcessParameter:null,
           index,
           flag: false,
@@ -337,7 +382,6 @@ export default class extends Vue {
     // this.currentSubprocessProIndex = null
   }
 
-
   private choiseProcessStep(step: any, index: number) {
     this.currentStep.stepList.map((item: any, i: number) => {
       let tempFlag = false;
@@ -350,9 +394,11 @@ export default class extends Vue {
     this.currentProcessStepIndex = index;
   }
 
-  private addSubprocessesStep(subprocessTypeId:any,subprocessParamsIndex:any) {
-    const item = this.originSubprocesses[subprocessTypeId]
-      .subprocesses;
+  private addSubprocessesStep(
+    subprocessTypeId: any,
+    subprocessParamsIndex: any
+  ) {
+    const item = this.originSubprocesses[subprocessTypeId].subprocesses;
     const child = item[subprocessParamsIndex];
     const pro_form: any = {};
     for (let i in child.properties) {
@@ -366,6 +412,50 @@ export default class extends Vue {
       subprocessParamsIndex,
       Object.assign(child, { steps: child.steps })
     );
+  }
+
+  showEditorProcessEventAndSubprocess(value: any) {
+    this.currentStepId = value;
+    // console.log(value);
+    this.subprocessShow = true
+  }
+  private saveProcessEventsAndSubprocess() {
+    this.saveEvents = true;
+    const propertyValues:any[] = [];
+    for(let property in this.$refs.events.processPorperties){
+      const obj:any = {};
+      obj.propertyId = property;
+      obj.value = this.$refs.events.processPorperties[property]
+      propertyValues.push(obj)
+    }
+    const processEvents:any[] = [];
+    console.log(this.$refs.events.processEvents)
+    for(let item of this.$refs.events.processEvents){
+      if(item.subProcessTypeId !== undefined && item.subProcessTypeId !== null){
+        const obj:any = {};
+        obj.eventId = item.id;
+        obj.subProcessTypeId = this.originSubprocesses[item.subProcessTypeId].id;
+        obj.subProcessIndex = item.subProcessIndex || 0;
+        const arr = this.originSubprocesses.filter(os => os.id === obj.subProcessTypeId && os.property);
+        console.log(arr)
+        if(arr.length > 0){
+          obj.subProcessParameter = Object.values(arr[0].property)[0]
+        }
+        processEvents.push(obj)
+      }
+    }
+    for(let key in this.steps){
+      if(key === this.currentStepId){
+        const obj = this.steps[key]
+        this.$set(this.steps,key,{...obj,propertyValues,processEvents})
+      }
+    }
+    this.saveEvents = false;
+    this.$message({
+      message:"流程事件属性已保存",
+      type:'success'
+    })
+    this.subprocessShow = false;
   }
 }
 </script>
